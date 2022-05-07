@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IWeather } from './interface/IWeather';
 import { WeatherService } from './services/weather.service';
 
 @Component({
@@ -6,18 +7,29 @@ import { WeatherService } from './services/weather.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit{
-  title = 'weather-app';
+export class AppComponent implements OnInit {
+  weatherData?: IWeather;
+  cityName:string = 'yaba';
 
-  constructor(private weatherService : WeatherService){}
+  constructor(private weatherService: WeatherService) { }
 
   ngOnInit(): void {
-    this.weatherService.getWeatherData('lagos').subscribe({
-      next:(response)=>{
-        console.log(response)
+    this.getWeatherData(this.cityName)
+    this.cityName = '';
+  }
+
+  onGetLocationDetails(){
+     this.getWeatherData(this.cityName);
+     this.cityName = '';
+  }
+
+  private getWeatherData(cityName:string){
+    this.weatherService.getWeatherData(cityName).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.weatherData = response;
       }
     })
-    
   }
 
 }
